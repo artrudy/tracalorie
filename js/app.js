@@ -10,6 +10,7 @@ class Calorietracker {
         this._displayCaloriesConsumed();
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
+        this._displayCelorieProgress();
     }
 
     //Public methods //API
@@ -52,8 +53,35 @@ class Calorietracker {
 
     _displayCaloriesRemaining(){
         const caloriesRemainingEl = document.getElementById('calories-remaining');
+
+        const progressEl = document.getElementById('calorie-progress')
         const remaining = this._calorieLimit - this._totalcalorie;
         caloriesRemainingEl.innerHTML = remaining;
+
+        if (remaining <= 0 ) {
+            caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-light');
+            caloriesRemainingEl.parentElement.parentElement.classList.add('bg-danger');  
+            
+            progressEl.classList.remove('bg-success');
+            progressEl.classList.add('bg-danger');
+
+        } esle (
+            caloriesRemainingEl.parentElement.parentElement.classList.add('bg-light');
+            caloriesRemainingEl.parentElement.parentElement.classList.remove('bg-danger');  
+
+
+            progressEl.classList.add('bg-success');
+            progressEl.classList.remove('bg-danger');
+        )
+
+    }
+
+    _displayCelorieProgress(){
+        const progressEl = document.getElementById('calorie-progress');
+        const percentage = (this._totalcalories / this._displayCaloriesLimit) * 100;
+        const width = Math.min(percentage, 100);
+        progressEl.style.width = `${width}%`
+
 
     }
 
@@ -62,6 +90,7 @@ class Calorietracker {
         this._displayCaloriesConsumed();
         this._displayCaloriesBurned();  
         this._displayCaloriesRemaining();
+        this._displayCelorieProgress();
     }
 }
 class Workout {
