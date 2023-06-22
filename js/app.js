@@ -10,7 +10,7 @@ class Calorietracker {
         this._displayCaloriesConsumed();
         this._displayCaloriesBurned();
         this._displayCaloriesRemaining();
-        this._displayCelorieProgress();
+        this._displayCalorieProgress();
     }
 
     //Public methods //API
@@ -27,6 +27,31 @@ class Calorietracker {
         this._totalcalories -= workout.calories;
         this._displayNewWorkout(workout);
         this._render();
+    }
+
+    removeMeal(id){
+        const index = this._meals.findIndex((meal) => meal.id === id);
+
+        if (index !== -1) {
+            const meal = this._meals[index];
+            this._totalCalories -= meal.calories;
+            this._meals.splice(index, 1);
+            this._render();
+            
+        }
+    }
+
+
+    removeWorkout(id){
+        const index = this._workouts.findIndex((workout) => workout.id === id);
+
+        if (index !== -1) {
+            const workout = this._workouts[index];
+            this._totalCalories -= workout.calories;
+            this.workout.splice(index, 1);
+            this._render();
+            
+        }
     }
 
 
@@ -173,6 +198,14 @@ class App {
         document
         .getElementById('workout-form')
         .addEventListener('submit', this._newItem.bind(this, 'workout'))
+
+        document
+        .getElementById('meal-item')
+        .addEventListener('click', this._removeItems.bind(this, 'meal')) 
+
+        document
+        .getElementById('workout-item')
+        .addEventListener('click', this._removeItems.bind(this, 'workout')) 
     }
 
     _newItem(type, e){
@@ -202,6 +235,22 @@ class App {
         const bsCollapse = new bootstrap.Collpse(collapseItem, {
             toggle: true
         });
+    }
+
+    _removeItem(type, e){
+        if (e.target.classList.contains('delete') || e.target.classList.contains('fa-xmark')) {
+            if (confirm('Are you sure?')) {
+                const id = e.target.closest('.card').getAttribute('data-id');
+
+                type === 'meal'
+                    ?this._tracker.removeMeal(id)
+                    : this._tracker.removeWorkout(id);
+
+                e.target.closest('.card').remove();
+                
+            }
+            
+        }
     }
 }
 const app = new App();
