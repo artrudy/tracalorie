@@ -29,6 +29,17 @@ class Calorietracker {
         this._render();
     }
 
+    reset(){
+        this._totalCalories = 0;
+        this._meals = [];
+        this._workouts = [];
+        this._render();
+
+    }
+
+
+
+
     removeMeal(id){
         const index = this._meals.findIndex((meal) => meal.id === id);
 
@@ -206,6 +217,18 @@ class App {
         document
         .getElementById('workout-item')
         .addEventListener('click', this._removeItems.bind(this, 'workout')) 
+
+        document.getElementById('filter-meals')
+            .addEventListener('keyup', this._filterOItems.bind(this, 'meals'))
+
+        document.getElementById('filter-workouts')
+            .addEventListener('keyup', this._filterOItems.bind(this, 'workout'))
+
+        document.getElementById('reset')
+            .addEventListener('keyuclick', this._reset.bind(this))
+
+
+
     }
 
     _newItem(type, e){
@@ -251,6 +274,32 @@ class App {
             }
             
         }
+    }
+
+    _filterOItems(type, e){
+        const text = e.target.value.toLowerCase();
+        document.querySelectorAll(`#{yype}-items.card`).forEach(item => 
+            {
+                const name = fisrstElementChild.fisrstElementChild.textContent;
+
+                if(name.toLowerCase().indexOf(text) !== -1){
+                    item.style.display = 'block'
+                } else {
+                    itemm.style.display = 'none';
+                }
+
+            })
+    }
+
+
+    _reset(){
+        this._tracker.reset();
+        document.getElementById('meal-items').innerHTML = '';
+        document.getElementById('workout-items').innerHTML = '';
+        document.getElementById('filter-meals').value = '';
+        document.getElementById('filter-workouts').value = '';
+
+
     }
 }
 const app = new App();
