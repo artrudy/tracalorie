@@ -34,7 +34,12 @@ class Calorietracker {
         this._meals = [];
         this._workouts = [];
         this._render();
+    }
 
+    setLimit(calorieLimit){
+        this._calorieLimit = calorieLimit;
+        this._displayCaloriesLimit();
+        this._render();
     }
 
 
@@ -225,7 +230,10 @@ class App {
             .addEventListener('keyup', this._filterOItems.bind(this, 'workout'))
 
         document.getElementById('reset')
-            .addEventListener('keyuclick', this._reset.bind(this))
+            .addEventListener('keyuclick', this._reset.bind(this));
+
+        document.getElementById('limit-form')
+            .addEventListener('submit', this._setLimit.bind(this));
 
 
 
@@ -264,19 +272,16 @@ class App {
         if (e.target.classList.contains('delete') || e.target.classList.contains('fa-xmark')) {
             if (confirm('Are you sure?')) {
                 const id = e.target.closest('.card').getAttribute('data-id');
-
                 type === 'meal'
                     ?this._tracker.removeMeal(id)
                     : this._tracker.removeWorkout(id);
 
-                e.target.closest('.card').remove();
-                
-            }
-            
+                e.target.closest('.card').remove();                
+            }            
         }
     }
 
-    _filterOItems(type, e){
+    _filterItems(type, e){
         const text = e.target.value.toLowerCase();
         document.querySelectorAll(`#{yype}-items.card`).forEach(item => 
             {
@@ -285,9 +290,8 @@ class App {
                 if(name.toLowerCase().indexOf(text) !== -1){
                     item.style.display = 'block'
                 } else {
-                    itemm.style.display = 'none';
+                    item.style.display = 'none';
                 }
-
             })
     }
 
@@ -298,8 +302,23 @@ class App {
         document.getElementById('workout-items').innerHTML = '';
         document.getElementById('filter-meals').value = '';
         document.getElementById('filter-workouts').value = '';
+    }
 
+    _setLimit(e){
+        e.preventDefault();
+        const limit = document.getElementById('limit');
 
+        if (limit.value === '') {
+            alert('please add limit');
+            return;           
+        }
+
+    this._tracker.setLimit(+limit.value);
+    limit.value = '';
+
+    const modalEl = document.getElementById('limit-modal');
+    const modal = bootstrap.Modal.getInstance('modalEl');
+    modal.hide();
     }
 }
 const app = new App();
